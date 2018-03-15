@@ -13,6 +13,7 @@ var index = require("./routes/index");
 var books = require("./routes/books");
 const mongoose = require('mongoose');
 const Book = require('./models/books');
+const seedDB = require('./seeds');
 var app = express();
 
 // view engine setup
@@ -35,6 +36,7 @@ const dbUrl = process.env.MONGODB_URI;
 mongoose.connect(dbUrl, async function(err){
   if(err) throw err;
   console.log('Connected successfully');
+  seedDB();
 
   //create entry record in the db
   // const firstBook = new Book({
