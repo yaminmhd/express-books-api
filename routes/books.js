@@ -39,6 +39,10 @@ router.post("/", async function(req, res) {
 
 router.put("/:id", async function(req, res) {
   try {
+    let updatedDetails = {
+      title: req.body.title,
+      description: req.body.description
+    }
     await Book.findByIdAndUpdate(req.params.id, req.body, {new:true}).exec();
     const updatedBook = await Book.findById(req.params.id).exec();
     res.json(updatedBook);

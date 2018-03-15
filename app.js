@@ -1,3 +1,7 @@
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').load();
+}
+
 var express = require("express");
 var path = require("path");
 var favicon = require("serve-favicon");
@@ -25,9 +29,11 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/", index);
 app.use("/books", books);
 
+const dbUrl = process.env.MONGODB_URI;
+
 //connection to mongodb and creating the db
-mongoose.connect('mongodb://localhost/express_books_api', async function(err){
-  if(err) throw error;
+mongoose.connect(dbUrl, async function(err){
+  if(err) throw err;
   console.log('Connected successfully');
 
   //create entry record in the db
