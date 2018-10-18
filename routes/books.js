@@ -32,11 +32,24 @@ router.post("/", async (req, res, next) => {
 });
 
 router.put("/:id", (req, res, next) => {
-  res.json({ message: `update book with id ${req.params.id}` });
+  try{
+    const updatedResult = await Book.findByIdAndUpdate(req.params.id, req.body, {new:true})
+    res.json({
+      result: updatedResult,
+      message: `update book with id ${req.params.id}`
+    });
+  }catch(error){
+    next(error);
+  }
 });
 
 router.delete("/:id", (req, res, next) => {
-  res.json({ message: `delete book with id ${req.params.id}` });
+  try{
+    await Book.findByIdAndDelete(req.params.id);
+    res.json({ message: `delete book with id ${req.params.id}` });
+  }catch(error){
+    next(error);
+  }
 });
 
 module.exports = router;
