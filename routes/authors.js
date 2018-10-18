@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const Author = require("../models/author");
+const Book = require("../models/book");
 
 router.post("/", async (req, res, next) => {
   const newAuthor = new Author({
