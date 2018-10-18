@@ -1,4 +1,4 @@
-const Book = require('./models/books');
+const Book = require('./models/book');
 const mongoose = require('mongoose');
 
 const data = [

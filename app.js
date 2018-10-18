@@ -2,19 +2,19 @@ if (process.env.NODE_ENV !== 'production') {
   require('dotenv').load();
 }
 
-var express = require("express");
-var path = require("path");
-var favicon = require("serve-favicon");
-var logger = require("morgan");
-var cookieParser = require("cookie-parser");
-var bodyParser = require("body-parser");
+const express = require("express");
+const path = require("path");
+const favicon = require("serve-favicon");
+const logger = require("morgan");
+const cookieParser = require("cookie-parser");
+const bodyParser = require("body-parser");
 
-var index = require("./routes/index");
-var books = require("./routes/books");
+const index = require("./routes/index");
+const books = require("./routes/books");
+const authors = require("./routes/authors");
 const mongoose = require('mongoose');
-const Book = require('./models/books');
 const seedDB = require('./seeds');
-var app = express();
+const app = express();
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
@@ -29,30 +29,13 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 app.use("/", index);
 app.use("/books", books);
+app.use("/authors", authors);
 
-const dbUrl = process.env.MONGODB_URI;
 
-//connection to mongodb and creating the db
-mongoose.connect(dbUrl, async function(err){
-  if(err) throw err;
-  console.log('Connected successfully');
-  seedDB();
-
-  //create entry record in the db
-  // const firstBook = new Book({
-  // _id: new mongoose.Types.ObjectId(),
-  // title: 'Harry Potter',
-  // description: 'Part One'
-  // });
-
-  // await firstBook.save();
-
-  // console.log('Book saved!');
-});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-  var err = new Error("Not Found");
+  const err = new Error("Not Found");
   err.status = 404;
   next(err);
 });

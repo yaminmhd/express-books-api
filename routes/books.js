@@ -1,66 +1,42 @@
-const mongoose = require('mongoose');
-var express = require("express");
-var router = express.Router();
-const Book = require('../models/books');
-
+const express = require("express");
+const router = express.Router();
+const Book = require("../models/book");
 
 /* GET books listing. */
-router.get("/", async function(req, res) {
+router.get("/", async (req, res, next) => {
   try {
-    const books = await Book.find({}).exec();
-    res.send(books);
+    const books = await Book.find().populate("author");
+    res.json(books);
   } catch (error) {
-    res.send(error);
-  }
-
-});
-
-router.get("/:id", async function(req, res) {
-  try {
-    const booksById = await Book.findById(req.params.id).exec();
-    res.json(booksById);
-  } catch (error) {
-    res.send(error);
+    next(error);
   }
 });
 
-router.post("/", async function(req, res) {
+router.get("/:id", (req, res, next) => {
+  res.json({ message: `get book with id ${req.params.id}` });
+});
+
+router.post("/", async (req, res, next) => {
   try {
-    const createdBook = Book({
-      _id: new mongoose.Types.ObjectId(),
+    const newBook = new Book({
       title: req.body.title,
-      description: req.body.description
+      author: req.body.author
     });
-    await createdBook.save()
-    res.json(createdBook);
+
+    await newBook.save();
+
+    res.status(201).json({ message: `created a new book successfully` });
   } catch (error) {
-    res.send(error)
+    next(error);
   }
 });
 
-router.put("/:id", async function(req, res) {
-  try {
-    let updatedDetails = {
-      title: req.body.title,
-      description: req.body.description
-    }
-    await Book.findByIdAndUpdate(req.params.id, req.body, {new:true}).exec();
-    const updatedBook = await Book.findById(req.params.id).exec();
-    res.json(updatedBook);
-  } catch (error) {
-    res.send(error);
-  }
-
+router.put("/:id", (req, res, next) => {
+  res.json({ message: `update book with id ${req.params.id}` });
 });
 
-router.delete("/:id", async function(req, res) {
-  try{
-    await Book.findByIdAndRemove(req.params.id).exec();
-    res.json({ message: `Book with the id ${req.params.id} has been deleted`});
-  }catch(error){
-    res.send(error);
-  }
-
+router.delete("/:id", (req, res, next) => {
+  res.json({ message: `delete book with id ${req.params.id}` });
 });
 
 module.exports = router;

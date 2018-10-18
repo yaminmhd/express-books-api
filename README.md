@@ -1,4 +1,4 @@
-# Express blog api
+# Mongoose-express-blog-api
 
 ## Getting started
 - Fork and clone repo
