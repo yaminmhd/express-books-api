@@ -4,9 +4,10 @@ const request = require("supertest");
 const MongodbMemoryServer = require("mongodb-memory-server").default;
 const mongod = new MongodbMemoryServer();
 const mongoose = require("mongoose");
-const Author = require("./models/author");
+const Author = require("../models/author");
+const Book = require("../models/book");
 
-const app = require("./app");
+const app = require("../app");
 
 async function addFakeAuthors() {
   const author1 = new Author({
@@ -24,6 +25,22 @@ async function addFakeAuthors() {
   await author2.save();
 }
 
+const addFakeBooks = async () => {
+  const author = new Author({
+    name: "kim",
+    age: 20
+  });
+
+  const savedAuthor = await author.save();
+
+  const book = new Book({
+    title: "Game of thrones",
+    author: `${savedAuthor._id}`
+  });
+
+  await book.save();
+};
+
 beforeAll(async () => {
   jest.setTimeout(120000);
   const uri = await mongod.getConnectionString();
@@ -37,27 +54,27 @@ afterAll(() => {
 
 beforeEach(async () => {
   mongoose.connection.db.dropDatabase();
-  await addFakeAuthors();
 });
 
-test("GET /authors", async () => {
+test("GET /authors should display all authors", async () => {
+  await addFakeAuthors();
   const response = await request(app).get("/authors");
 
   expect(response.status).toBe(200);
   expect(response.body.length).toBe(2);
 });
 
-test("POST /authors", async () => {
-  const postAuthor = new Author({
-    name: "King",
-    age: 43
-  });
-  const postResult = await request(app)
-    .post("/authors")
-    .send(postAuthor)
-    .set("Accept", "application/json");
-  expect(postResult.status).toBe(201);
-  const response = await request(app).get("/authors");
+test("GET /books should display all books", async () => {
+  await addFakeBooks();
+  const response = await request(app).get("/books");
+
   expect(response.status).toBe(200);
-  expect(response.body.length).toBe(3);
+  expect(response.body.length).toBe(1);
+});
+
+test("GET /index should display welcome message", async () => {
+  const response = await request(app).get("/");
+
+  expect(response.status).toBe(200);
+  expect(response.body.message).toEqual("hello express-blog-api");
 });

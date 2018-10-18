@@ -47,7 +47,7 @@ router.put("/:id", async (req, res, next) => {
       { new: true }
     );
     res.json({
-      result: updatedResult,
+      ...updatedResult.toJSON(),
       message: `update book with id ${req.params.id}`
     });
   } catch (error) {
@@ -57,8 +57,11 @@ router.put("/:id", async (req, res, next) => {
 
 router.delete("/:id", async (req, res, next) => {
   try {
-    await Book.findByIdAndDelete(req.params.id);
-    res.json({ message: `delete book with id ${req.params.id}` });
+    const deletedBook = await Book.findByIdAndDelete(req.params.id);
+    res.json({
+      ...deletedBook.toJSON(),
+      message: `delete book with id ${req.params.id}`
+    });
   } catch (error) {
     next(error);
   }

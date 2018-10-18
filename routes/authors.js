@@ -39,4 +39,32 @@ router.get("/:id", async (req, res, next) => {
   }
 });
 
+router.put("/:id", async (req, res, next) => {
+  try {
+    const updatedAuthor = await Author.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true }
+    );
+    res.json({
+      ...updatedAuthor.toJSON(),
+      message: `Author with id ${req.params.id} has been updated successfully`
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.delete("/:id", async (req, res, next) => {
+  try {
+    const deletedAuthor = await Author.findOneAndRemove({ _id: req.params.id });
+    res.json({
+      ...deletedAuthor.toJSON(),
+      message: `Author with id ${req.params.id} has been deleted successfully`
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
 module.exports = router;
