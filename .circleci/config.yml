@@ -16,10 +16,14 @@ jobs:
           paths:
             - ./node_modules
       - run: # run tests
-          name: Run Test
-          command: npm test
+          name: "Javascript Test Suite"
+          command: npm test -- --ci --testResultsProcessor="jest-junit"
+          environment:
+            JEST_JUNIT_OUTPUT: "reports/junit/js-test-results.xml"
       - store_test_results:
-          path: test-results
+          path: reports/junit
+      - store_artifacts:
+          path: reports/junit
   deploy:
     docker:
       - image: buildpack-deps:trusty
