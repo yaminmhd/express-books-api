@@ -4,16 +4,20 @@ const Author = require("../models/author");
 const Book = require("../models/book");
 
 router.post("/", async (req, res, next) => {
-  const newAuthor = new Author({
-    name: req.body.name,
-    age: req.body.age
-  });
+  try {
+    const newAuthor = new Author({
+      name: req.body.name,
+      age: req.body.age
+    });
 
-  await newAuthor.save();
+    await newAuthor.save();
 
-  res.status(201).json({
-    message: "successfully created new author"
-  });
+    res.status(201).json({
+      message: "successfully created new author"
+    });
+  } catch (error) {
+    next(error);
+  }
 });
 
 router.get("/", async (req, res, next) => {

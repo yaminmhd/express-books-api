@@ -12,8 +12,16 @@ router.get("/", async (req, res, next) => {
   }
 });
 
-router.get("/:id", (req, res, next) => {
-  res.json({ message: `get book with id ${req.params.id}` });
+router.get("/:id", async (req, res, next) => {
+  try {
+    const result = await Book.findById(req.params.id);
+    res.json({
+      message: `get book with id ${req.params.id}`,
+      ...result.toJSON()
+    });
+  } catch (error) {
+    next(error);
+  }
 });
 
 router.post("/", async (req, res, next) => {
@@ -31,23 +39,27 @@ router.post("/", async (req, res, next) => {
   }
 });
 
-router.put("/:id", (req, res, next) => {
-  try{
-    const updatedResult = await Book.findByIdAndUpdate(req.params.id, req.body, {new:true})
+router.put("/:id", async (req, res, next) => {
+  try {
+    const updatedResult = await Book.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true }
+    );
     res.json({
       result: updatedResult,
       message: `update book with id ${req.params.id}`
     });
-  }catch(error){
+  } catch (error) {
     next(error);
   }
 });
 
-router.delete("/:id", (req, res, next) => {
-  try{
+router.delete("/:id", async (req, res, next) => {
+  try {
     await Book.findByIdAndDelete(req.params.id);
     res.json({ message: `delete book with id ${req.params.id}` });
-  }catch(error){
+  } catch (error) {
     next(error);
   }
 });
