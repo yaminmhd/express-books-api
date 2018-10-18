@@ -5,8 +5,6 @@ if (process.env.NODE_ENV !== 'production') {
 const express = require("express");
 const path = require("path");
 const logger = require("morgan");
-const cookieParser = require("cookie-parser");
-const bodyParser = require("body-parser");
 
 const index = require("./routes/index");
 const books = require("./routes/books");
@@ -27,7 +25,6 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/", index);
 app.use("/books", books);
 app.use("/authors", authors);
-
 
 
 // catch 404 and forward to error handler
