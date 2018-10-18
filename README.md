@@ -1,6 +1,10 @@
-# Express-books-apigit 
+# Express-books-api
 
 ## Getting started
 - Fork and clone repo
-- Install dependencies: `yarn install`
+- Install dependencies: `npm install`
 - Start application: `nodemon server.js`
+- Run test: `npm test`
+
+## Circle CI configuration setup
+- `config.yml`
