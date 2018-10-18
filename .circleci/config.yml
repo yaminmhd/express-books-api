@@ -11,6 +11,8 @@ jobs:
       - run:
           name: Setup Dependencies
           command: npm install
+      - store_test_results:
+          path: test-results
       - save_cache: # special step to save the dependency cache
           key: dependency-cache-{{ checksum "package.json" }}
           paths:
