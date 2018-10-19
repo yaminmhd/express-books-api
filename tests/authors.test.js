@@ -85,6 +85,7 @@ test("PUT /authors/:id should update selected author", async () => {
   );
 });
 
+
 test("DELETE /authors/:id should delete selected author", async () => {
   const name = "lisa";
   const age = 50;
@@ -102,4 +103,18 @@ test("DELETE /authors/:id should delete selected author", async () => {
   expect(response.body.message).toEqual(
     `Author with id ${savedAuthor.id} has been deleted successfully`
   );
+});
+
+test('"GET /authors/:id should retrieve selected author"', async () => {
+  const newAuthor = new Author({
+    name: "Yamin",
+    age: 25
+  });
+  const savedAuthor = await newAuthor.save();
+
+  const response = await request(app).get(`/authors/${savedAuthor._id}`);
+
+  expect(response.status).toBe(200);
+  expect(response.body.name).toEqual(newAuthor.name);
+  expect(response.body.age).toEqual(newAuthor.age);
 });
